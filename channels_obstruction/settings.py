@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'game',
     'channels',
     'webpack_loader',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -139,6 +141,8 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [(redis_host, 6379)],
+            "prefix": 'asgi2:',
+
         },
     },
 }

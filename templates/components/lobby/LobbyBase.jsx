@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Websocket from 'react-websocket'
 import $ from 'jquery'
 import PlayerGames from './PlayerGames'
+import AvailableGames from './AvailableGames'
 
 class LobbyBase extends React.Component {
 
@@ -25,8 +26,17 @@ class LobbyBase extends React.Component {
         }.bind(this))
     }
 
+    getAvailableGames(){
+        this.serverRequest = $.get('http://localhost:8000/available-games/?format=json', function (result) {
+           this.setState({
+            available_game_list: result
+             })
+        }.bind(this))
+    }
+
     componentDidMount() {
        this.getPlayerGames()
+       this.getAvailableGames()
     }
 
     componentWillUnmount() {
@@ -36,10 +46,14 @@ class LobbyBase extends React.Component {
     handleData(data) {
         //receives messages from the connected websocket
         let result = JSON.parse(data)
+        console.log('deepak')
+        console.log(result)
         // new games, so get an updated list of this player's game
         this.getPlayerGames()
+        this.getAvailableGames()
+
         // we've received an updated list of available games
-        this.setState({available_game_list: result})
+        // this.setState({available_game_list: result})
     }
 
     sendSocketMessage(message){
@@ -58,6 +72,10 @@ class LobbyBase extends React.Component {
                     <PlayerGames player={this.props.current_user} game_list={this.state.player_game_list}
                                  sendSocketMessage={this.sendSocketMessage} />
                 </div>
+                <div className="col-lg-4">
+                     <AvailableGames player={this.props.current_user} game_list={this.state.available_game_list}
+                                     sendSocketMessage={this.sendSocketMessage} />
+                </div>
             </div>
 
         )
@@ -69,7 +87,5 @@ LobbyBase.propTypes = {
     socket: React.PropTypes.string
 };
 */
-
-
 
 export default LobbyBase;

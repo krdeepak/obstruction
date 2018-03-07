@@ -30,8 +30,13 @@ class Game(models.Model):
         return 'Game #{0}'.format(self.pk)
 
     @staticmethod
-    def get_available_games():
-        return Game.objects.filter(opponent=None, completed=None)
+    def get_available_games(user=None):
+        games = Game.objects.filter(opponent=None, completed=None)
+        if user:
+            print('inside user')
+            games = games.exclude(creator=user)
+
+        return games
 
     @staticmethod
     def created_count(user):

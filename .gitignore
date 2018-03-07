@@ -7,6 +7,7 @@
 *.py[co]
 .tox/
 .idea/
+.ipynb_checkpoints/
 __pycache__
 MANIFEST
 dist/
@@ -17,4 +18,5 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+static/bundles/
 *.sqlite3

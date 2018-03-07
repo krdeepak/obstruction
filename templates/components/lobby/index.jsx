@@ -8,10 +8,13 @@ var lobby_sock = 'ws://' + window.location.host + "/lobby/"
 // preset the current_user
 var current_user = null
 
+$.get('http://localhost:8000/current-user/?format=json', function(result){
+    // gets the current user information from Django
+    current_user = result
+    render_component()
+})
+
 // renders out the base component
 function render_component(){
     ReactDOM.render(<LobbyBase current_user={current_user} socket={lobby_sock}/>, document.getElementById('lobby_component'))
 }
-
-
-render_component()

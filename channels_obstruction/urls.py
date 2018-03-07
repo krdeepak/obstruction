@@ -19,6 +19,8 @@ from django.urls import path
 from game.views import *
 from django.contrib.auth.views import login, logout
 
+from rest_framework.routers import DefaultRouter
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', CreateUserView.as_view()),
@@ -28,3 +30,13 @@ urlpatterns = [
 
     path('', HomeView.as_view())
 ]
+
+# urls for api - django rest framework
+urlpatterns += [
+ path('current-user/', CurrentUserView.as_view()),
+]
+
+router = DefaultRouter()
+router.register(r'player-games', PlayerGameViewSet, 'player_games')
+router.register(r'available-games', AvailableGameViewSet, 'available_games')
+urlpatterns += router.urls
