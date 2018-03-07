@@ -50,3 +50,45 @@ class AvailableGameViewSet(viewsets.ViewSet):
         queryset = Game.get_available_games(request.user)
         serializer = GameSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class SingleGameViewSet(APIView):
+    """
+    Get all data for a game: Game Details, Squares
+    """
+
+    def get(self, request, **kwargs):
+        game = Game.get_by_id(kwargs['game_id'])
+        squares = game.get_all_game_squares()
+        log = game.get_game_log()
+        game_serializer = GameSerializer(game)
+        log_serializer = GameLogSerializer(log, many=True)
+        square_serializer = GameSquareSerializer(squares, many=True)
+        return_data = {'game': game_serializer.data,
+                       'log': log_serializer.data,
+                       'squares': square_serializer.data}
+        return Response(return_data)
+
+
+class GameSquaresViewSet(viewsets.ViewSet):
+
+    def retrieve(self, request, pk=None):
+        game = get_object_or_404(Game, pk=pk)
+        squares = game.get_all_game_squares()
+        serializer = GameSquareSerializer(squares, many=True)
+        return Response(serializer.data)
+
+
+class ClaimSquareView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Game.objects.get(pk=pk)
+        except Game.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk):
+        game = self.get_object(pk)
+        # update the owner
+        print(game)
+        return Response(serializer.errors)

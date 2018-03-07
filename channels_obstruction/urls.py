@@ -27,6 +27,7 @@ urlpatterns = [
     path('login/', login, {'template_name': 'login.html'}),
     path('logout/', logout, {'next_page': '/'}),
     path('lobby/', LobbyView.as_view()),
+    path('game/<int:game_id>/', GameView.as_view()),
 
     path('', HomeView.as_view())
 ]
@@ -34,9 +35,12 @@ urlpatterns = [
 # urls for api - django rest framework
 urlpatterns += [
  path('current-user/', CurrentUserView.as_view()),
+ path('game-from-id/<int:game_id>/', SingleGameViewSet.as_view()),
+
 ]
 
 router = DefaultRouter()
 router.register(r'player-games', PlayerGameViewSet, 'player_games')
 router.register(r'available-games', AvailableGameViewSet, 'available_games')
+router.register(r'game-squares', GameSquaresViewSet, 'game_squares')
 urlpatterns += router.urls

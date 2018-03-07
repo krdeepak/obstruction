@@ -15,3 +15,16 @@ class GameSerializer(serializers.ModelSerializer):
         fields = ('id', 'winner', 'creator', 'opponent', 'cols',
                   'rows', 'completed', 'created', 'current_turn')
         depth = 1
+
+
+class GameSquareSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameSquare
+        fields = ('id', 'game', 'owner', 'status', 'row', 'col')
+
+
+class GameLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameLog
+        fields = ('id', 'text', 'player', 'created')
+        depth = 1

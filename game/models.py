@@ -126,7 +126,7 @@ class Game(models.Model):
         Send the updated game information and squares to the game's channel group
         """
         # imported here to avoid circular import
-        from serializers import GameSquareSerializer, GameLogSerializer, GameSerializer
+        from .serializers import GameSquareSerializer, GameLogSerializer, GameSerializer
 
         squares = self.get_all_game_squares()
         square_serializer = GameSquareSerializer(squares, many=True)
@@ -142,6 +142,13 @@ class Game(models.Model):
                    'squares': square_serializer.data}
 
         game_group = 'game-{0}'.format(self.id)
+
+        from channels.layers import get_channel_layer
+        from asgiref.sync import async_to_sync
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            game_group,
+            {'type': 'game.update', 'text': json.dumps(message)})
         # Group(game_group).send({'text': json.dumps(message)})
 
     def next_player_turn(self):
